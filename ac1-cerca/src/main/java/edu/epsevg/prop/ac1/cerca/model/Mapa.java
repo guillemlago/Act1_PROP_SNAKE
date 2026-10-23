@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayDeque;
 import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * Implementació concreta de {@link MapaBase}. Aquí és on cal decidir quan dos estats
@@ -30,14 +31,22 @@ public class Mapa extends MapaBase {
 
     @Override
     public boolean equals(Object o) {
-        //@TODO: implementar
-        return false;
+        if (this == o) return true;
+        if (!(o instanceof Mapa)) return false;
+
+        Mapa mapa = (Mapa) o;
+        return n == mapa.n
+                && m == mapa.m
+                && agents.equals(mapa.agents)
+                && getSortides().equals(mapa.getSortides())
+                && Arrays.deepEquals(grid, mapa.grid);
     }
 
     @Override
     public int hashCode() {
-        //@TODO: implementar
-        return 0;
+        int resultat = Objects.hash(n, m, agents, getSortides());
+        resultat = 31 * resultat + Arrays.deepHashCode(grid);
+        return resultat;
     }
 
     /**
