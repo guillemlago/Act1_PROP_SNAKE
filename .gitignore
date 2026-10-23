@@ -1,0 +1,4 @@
+target/
+*.class
+results.csv
+resultat.csv

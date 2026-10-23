@@ -37,3 +37,22 @@ El mapa en qüestió:
 - Definim els objectes que interactuen amb el problema.
 - Definim els estats inicials dels objectes.
 - Definim les adjacencies de les caselles, només horitzonal i verticalment, ja que no es permeten moviments en diagonal.
+
+### Pla trobat amb LAMA-first
+
+El planificador LAMA-first ha trobat una solució per al mapa A de **12 accions**, que coincideix amb la longitud òptima indicada a l'enunciat:
+
+```text
+(moure agent-a p26 p25)
+(moure agent-a p25 p24)
+(moure agent-a p24 p23)
+(moure agent-b p41 p42)
+(moure agent-b p42 p43)
+(moure agent-b p43 p44)
+(moure agent-a p23 p22)
+(moure agent-a p22 p21)
+(sortir agent-a p21 p20)
+(moure agent-b p44 p45)
+(moure agent-b p45 p46)
+(sortir agent-b p46 p47)
+```

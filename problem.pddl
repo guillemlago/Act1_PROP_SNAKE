@@ -90,8 +90,13 @@
     (adjacent p35 p45)
     (adjacent p45 p35)
 
+    (adjacent p26 p36)
+    (adjacent p36 p26)
     (adjacent p36 p46)
     (adjacent p46 p36)
+
+    (adjacent p31 p41)
+    (adjacent p41 p31)
   )
 
   (:goal
