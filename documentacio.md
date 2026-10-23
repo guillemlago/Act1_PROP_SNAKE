@@ -1,6 +1,6 @@
 # Multi-Snake
 
-## Exercici 1
+## PRIMERA PART: Descripció en PDDL
 
 Haviem de fer una breu implementació en pddl del mapa A, dels diferents mapes que hi ha com a jocs de prova.
 
