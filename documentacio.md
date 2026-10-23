@@ -14,7 +14,7 @@ Per a definir el domini del mapa A, ens han de quedar ven definides les regles a
     * La casella no pot ser una paret.
     * La casella no pot ser part del seu rastre.
     * La casella no pot ser part d'un altre agent.
-    * La casella no pot ser la sortida d'un altre agent.
+    * Es pot trepitjar la sortida d'un altre agent; en abandonar-la, es converteix en paret i aquell agent ja no podrà sortir.
 - Quan un agent abandona la seva casella, l'anterior es torna paret.
 - Quan un agent arriba a la seva sortida:
     * L'agent desapareix.

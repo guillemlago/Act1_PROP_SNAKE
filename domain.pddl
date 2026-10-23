@@ -35,7 +35,7 @@
   )
 
   (:action sortir
-    :parametres (
+    :parameters (
       ?a - agent
       ?origen - casella
       ?desti - casella
@@ -49,7 +49,7 @@
       (not (fora ?a))
     )
 
-    :efect (and
+    :effect (and
       (not (en ?a ?origen))
       (not (lliure ?desti))
       (fora ?a)

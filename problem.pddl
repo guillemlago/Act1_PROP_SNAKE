@@ -4,15 +4,15 @@
   (:objects
     agent-a agent-b - agent
 
-    p20 p21 p22 p23 p24 p25
+    p20 p21 p22 p23 p24 p25 p26
     p31 p32 p34 p35 p36
-    p42 p43 p44 p45 p46 p47- casella
+    p41 p42 p43 p44 p45 p46 p47 - casella
   )
 
   (:init
     ; Agents
-    (en agent-a p27)
-    (en agent-b p42)
+    (en agent-a p26)
+    (en agent-b p41)
 
     ; Caselles lliures
     (lliure p20)
@@ -21,14 +21,12 @@
     (lliure p23)
     (lliure p24)
     (lliure p25)
-    (lliure p26)
-
     (lliure p31)
     (lliure p32)
-    (lliure p33)
     (lliure p35)
     (lliure p36)
 
+    (lliure p42)
     (lliure p43)
     (lliure p44)
     (lliure p45)
@@ -40,6 +38,8 @@
     (sortida agent-b p47)
 
     ; Adjacencies horitzontals
+    (adjacent p20 p21)
+    (adjacent p21 p20)
     (adjacent p21 p22)
     (adjacent p22 p21)
     (adjacent p22 p23)
@@ -58,6 +58,8 @@
     (adjacent p35 p36)
     (adjacent p36 p35)
 
+    (adjacent p41 p42)
+    (adjacent p42 p41)
     (adjacent p42 p43)
     (adjacent p43 p42)
     (adjacent p43 p44)
@@ -66,6 +68,8 @@
     (adjacent p45 p44)
     (adjacent p45 p46)
     (adjacent p46 p45)
+    (adjacent p46 p47)
+    (adjacent p47 p46)
 
     ; Adjacencies verticals
     (adjacent p21 p31)
