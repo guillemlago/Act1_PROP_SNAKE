@@ -26,6 +26,14 @@ Per a definir el domini del mapa A, ens han de quedar ven definides les regles a
 
 Per a definir el problema, cal primer definir l'estat inicial dels agents i l'estat del mapa. Definim les caselles lliures, les no definides, no són verdaderes, segons la teoría de predicats.
 
+El mapa en qüestió:
+
+    ########
+    a·····A#
+    #··#···#
+    #B·····b
+    ########
+
 - Definim els objectes que interactuen amb el problema.
 - Definim els estats inicials dels objectes.
 - Definim les adjacencies de les caselles, només horitzonal i verticalment, ja que no es permeten moviments en diagonal.

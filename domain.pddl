@@ -1,4 +1,4 @@
-(define (domain multi-snake) (:requirements :strips :typing)
+(define (domain multi-snake) (:requirements :strips :typing :negative-preconditions)
 
   (:types
     agent casella
@@ -13,7 +13,7 @@
   )
 
   (:action moure
-    :parametres (
+    :parameters (
       ?a - agent
       ?origen - casella
       ?desti - casella
@@ -27,7 +27,7 @@
       (not (sortida ?a ?desti))
     )
 
-    :efect (and
+    :effect (and
       (not (en ?a ?origen))
       (not (lliure ?desti))
       (en ?a ?desti)
