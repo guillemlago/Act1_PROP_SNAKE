@@ -12,7 +12,16 @@ public class CercaIDS extends Cerca {
 
     @Override
     public void ferCerca(Mapa inicial, ResultatCerca rc) {
-        //@TODO: implementar
+        CercaDFS cerca = new CercaDFS(usarLNT);
+        int limit = 0;
+        boolean limitAssolit;
+
+        do {
+            // Cada iteració crea una LNO i una LNT noves. El resultat conserva
+            // els comptadors acumulats i el màxim dels pics de memòria.
+            limitAssolit = cerca.ferCercaLimitada(inicial, rc, limit);
+            limit++;
+        } while (rc.getSolucio() == null && limitAssolit);
     }
     
     /**
