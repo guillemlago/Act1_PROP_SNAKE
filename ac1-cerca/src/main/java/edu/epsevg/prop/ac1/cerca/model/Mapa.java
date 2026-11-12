@@ -9,6 +9,7 @@ import java.nio.file.Path;
 import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.Queue;
 
 /**
  * Implementació concreta de {@link MapaBase}. Aquí és on cal decidir quan dos estats
@@ -59,7 +60,35 @@ public class Mapa extends MapaBase {
      */
     @Override
     public int[][] distancesFrom(Posicio src) {
-        //@TODO: implementar
-        return null;
+        int[][] distancies = new int[n][m];
+        for (int[] fila : distancies) {
+            Arrays.fill(fila, INF);
+        }
+
+        if (src == null || getCella(src) == PARET) {
+            return distancies;
+        }
+
+        Queue<Posicio> LNO = new ArrayDeque<>();
+        distancies[src.x][src.y] = 0;
+        LNO.add(src);
+
+        // La matriu de distàncies també indica les caselles ja descobertes.
+        while (!LNO.isEmpty()) {
+            Posicio actual = LNO.remove();
+
+            for (Direccio direccio : Direccio.values()) {
+                Posicio veina = actual.translate(direccio);
+                // getCella() també considera paret qualsevol posició fora del mapa.
+                if (getCella(veina) == PARET) continue;
+                if (distancies[veina.x][veina.y] != INF) continue;
+                if (agents.contains(veina)) continue;
+
+                distancies[veina.x][veina.y] = distancies[actual.x][actual.y] + 1;
+                LNO.add(veina);
+            }
+        }
+
+        return distancies;
     }
 }

@@ -14,14 +14,30 @@ public class HeuristicaAvancada implements Heuristica {
     
   
     public HeuristicaAvancada() {
-        //@TODO: implementar       
     }
 
     
     @Override
     public int h(Mapa estat) {
-        //@TODO: implementar
-        return 0;
+        List<Posicio> agents = estat.getAgents();
+        int suma = 0;
+
+        for (int id = 0; id < agents.size(); id++) {
+            // Els agents que ja han sortit no aporten cost pendent.
+            if (!estat.esAgentActiu(id)) continue;
+
+            Posicio pos = agents.get(id);
+            Posicio sortida = estat.getSortida(id);
+            int[][] distancies = estat.distancesFrom(pos);
+            int distancia = distancies[sortida.x][sortida.y];
+
+            // Una sortida inabastable impedeix completar la partida.
+            if (distancia == Mapa.INF) return Mapa.INF;
+
+            suma += distancia;
+        }
+
+        return suma;
     }
     
     @Override
