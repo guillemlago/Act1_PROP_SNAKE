@@ -23,6 +23,7 @@
     (lliure p25)
     (lliure p31)
     (lliure p32)
+    (lliure p34)
     (lliure p35)
     (lliure p36)
 
