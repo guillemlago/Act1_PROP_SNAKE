@@ -29,7 +29,7 @@ A les taules, **M** indica esgotament de memòria i **T**, límit de temps. **�
 
 ### [1] Resum dels mapes i algorismes
 
-S’han executat les 70 combinacions de mapa, cerca i ús de LNT. S’han obtingut **27 plans vàlids**, **33 fallades per memòria** i **10 per temps**. Un nombre al resum indica la longitud de la solució.
+La bateria estàndard inclou les 70 combinacions de mapa, cerca i ús de LNT: **27 plans vàlids**, **33 fallades per memòria** i **10 per temps**. A més, s’ha executat la cerca de camins disjunts del repte al mapa E, amb un pla vàlid de **133 moviments**. Un nombre al resum indica la longitud de la solució; `—` indica que aquella combinació no s’ha mesurat a la bateria.
 
 | Cerca | LNT | A | B1 | B2 | C | D | E | F |
 |---|---|---:|---:|---:|---:|---:|---:|---:|
@@ -43,6 +43,7 @@ S’han executat les 70 combinacions de mapa, cerca i ús de LNT. S’han obting
 | A* bàsica | Sí | 12 | 17 | 19 | 112 | M | M | M |
 | A* avançada | No | 12 | 17 | 19 | 112 | M | M | M |
 | A* avançada | Sí | 12 | 17 | 19 | 112 | 42 | M | M |
+| Camins disjunts (repte) | No | — | — | — | — | — | 133 | — |
 
 Els òptims de referència de l’enunciat són A=12 i D=42. Les cerques que garanteixen l’òptim i han acabat estableixen també B1=17, B2=19 i C=112. A les taules, una solució de DFS es marca com a òptima només si coincideix amb aquests costos, sense atribuir a DFS una garantia general.
 
@@ -135,6 +136,7 @@ Els òptims de referència de l’enunciat són A=12 i D=42. Les cerques que gar
 | A* bàsica | Sí | No (M) † | — | — | ≥ 116925 | ≥ 113625 | ≥ 340551 | ≥ 116924 | ≥ 457475 | ≥ 1010 |
 | A* avançada | No | No (M) † | — | — | ≥ 138882 | ≥ 292026 | ≥ 325484 | ≥ 0 | ≥ 325484 | ≥ 63036 |
 | A* avançada | Sí | No (M) † | — | — | ≥ 123432 | ≥ 284256 | ≥ 339504 | ≥ 123431 | ≥ 462935 | ≥ 58154 |
+| Camins disjunts (repte) | No | Sí | 133 | No determinada | 134 | 0 | 158 | 0 | 158 | 36 |
 
 #### Mètriques del mapa F
 
@@ -244,15 +246,21 @@ Les dades de fallada són les darreres mostres observades, no el nombre d’esta
 
 ### [10] Un altre enfocament per a E i F
 
-Proposem buscar **camins complets disjunts per agent**, combinant BFS, backtracking i cotes de Branch and Bound, tots presents a la teoria de l’assignatura. La proposta encara no forma part del codi Java del projecte.
+Hem implementat **`CercaCamins`** per resoldre el repte E. Combina backtracking amb distàncies BFS i busca **camins complets disjunts per agent**, sense generar les intercalacions equivalents dels seus moviments.
 
-1. Reservar els inicis i les sortides dels altres agents: un camí d’una solució completa no els pot utilitzar.
-2. Escollir un agent i generar camins simples cap a la seva sortida, amb preferència pels curts.
-3. Reservar totes les caselles del camí triat i continuar amb els altres agents.
-4. Si una BFS indica que algun agent pendent ja no pot arribar a la sortida, podar; si falla, retrocedir i provar **un altre camí**, no només un altre ordre d’agents.
-5. Per cercar l’òptim, mantenir la millor solució trobada i podar quan el cost compromès més la suma de distàncies individuals mínimes dels agents pendents no pugui millorar-la.
+![Solució del mapa E amb tres camins disjunts: A fa 51 moviments, B en fa 30 i C en fa 52, amb un total de 133.](imatges/mapa_E_solucio.png)
 
-Aquesta cerca seria completa si enumera tots els camins simples necessaris i no usa talls de recursos que en descartin alternatives; el tauler és finit. Per [11], qualsevol solució es pot executar agent per agent, de manera que no es perd cap solució global per eliminar intercalacions. Amb una cota inferior admissible i exploració exhaustiva de les alternatives no podades, Branch and Bound també garantiria l’òptim. En canvi, escollir només un camí BFS per agent i provar els sis ordres és una heurística de planificació: pot ser ràpida, però no és completa ni òptima.
+1. Escollim el primer agent que encara no ha sortit, en ordre A, B, C, etc., i no canviem d’agent fins que arriba a la seva sortida.
+2. Per cada agent pendent, una BFS inversa des de la seva sortida calcula les distàncies al tauler actual. Reserva les posicions i les sortides dels altres agents: cap solució completa pot compartir aquestes caselles.
+3. Si alguna sortida és inabastable, tallem la branca. Els rastres futurs només poden afegir obstacles; no poden recuperar-ne l’accés.
+4. Apilem els moviments legals de l’agent escollit en una LNO de tipus pila, prioritzant els que el deixen més a prop de la sortida segons la BFS. El model deixa el rastre corresponent a cada pas.
+5. Si una branca falla, la pila recupera alternatives anteriors: també es proven camins més llargs, no només un camí mínim per agent. Retornem la primera solució completa.
+
+**Completesa.** Amb recursos suficients, el mètode és complet: el rastre obliga cada agent a seguir un camí simple, el tauler és finit i s’exploren totes les alternatives no podades. Les podes són segures i, per [11], qualsevol solució es pot executar en l’ordre fix d’agents, perquè els seus camins no comparteixen caselles. Per tant, eliminar les intercalacions no elimina totes les representacions de cap solució. No s’utilitza LNT ni el límit 50 de la DFS estàndard.
+
+**Optimalitat.** No es garanteix: ordenar els passos per distància BFS guia la cerca, però no minimitza la suma dels camins de tots els agents. Per garantir l’òptim es podria continuar després de la primera solució i incorporar Branch and Bound amb una cota inferior admissible; aquesta extensió no està implementada.
+
+**Resultat a E.** La mesura del 15 de novembre de 2026 s’ha fet a la mateixa màquina indicada a les condicions, amb Java Temurin 25.0.2, `-Xmx2g` i tall extern de 120 segons. La cerca retorna **133 moviments** (A: 51, B: 30 i C: 52), validats pel validador del projecte, en **36 ms**. Explora **134 estats**, amb **0 talls**, pic LNO de **158 nodes** i LNT de **0**. El pic compta els nodes de la frontera de cerca; no és una mesura en bytes de les graelles ni de les matrius auxiliars BFS. La cota inferior inicial és 125; no hem demostrat si el pla de 133 és òptim. La taula d’E recull les mètriques. El repte F queda pendent.
 
 ### [11] Ordre dels agents i intercalacions equivalents
 
@@ -277,6 +285,7 @@ Per dos agents és `binomial(2N,N)`; per tres, `(3N)!/(N!)³`. Amb longituds dif
 | IDS | Òptim amb costos unitaris | Òptim amb la LNT reiniciada i el control de profunditats implementat |
 | A* bàsica | Òptim amb l’heurística admissible | Òptim amb l’heurística admissible i el tractament correcte de LNT |
 | A* avançada | Òptim amb l’heurística admissible i la poda segura d’inabastables | Òptim amb les mateixes condicions i el tractament correcte de LNT |
+| Camins disjunts (repte E) | No garanteix l’òptim | No s’utilitza LNT |
 
 BFS explora per profunditat; IDS augmenta el límit fins a la primera profunditat amb solució. Amb costos unitaris això dona una solució mínima. A* extreu primer la menor cota `g+h`; les heurístiques són admissibles i consistents, com s’ha justificat a [5], i la implementació admet reobertures si apareix un cost menor. Sense LNT, només es descarten repeticions dins de la branca, que no són necessàries per a un camí òptim.
 
